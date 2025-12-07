@@ -8,11 +8,14 @@ import { FileUploader } from "@/components/ichi-geki/FileUploader";
 import { ArrowLeft, Check, ChevronRight } from "lucide-react";
 import { useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
+import { useI18n } from "@/lib/i18n";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 export default function CreateProjectPage() {
   const [, setLocation] = useLocation();
   const [step, setStep] = useState(1);
   const [file, setFile] = useState<File | null>(null);
+  const { t } = useI18n();
 
   const handleFileSelect = (selectedFile: File) => {
     setFile(selectedFile);
@@ -28,11 +31,14 @@ export default function CreateProjectPage() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <header className="bg-white border-b sticky top-0 z-20">
-        <div className="container mx-auto px-6 h-16 flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => setLocation("/dashboard")}>
-            <ArrowLeft className="w-5 h-5" />
-          </Button>
-          <div className="font-semibold text-lg">Create Translation Material</div>
+        <div className="container mx-auto px-6 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+             <Button variant="ghost" size="icon" onClick={() => setLocation("/dashboard")}>
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
+            <div className="font-semibold text-lg">{t('create.title')}</div>
+          </div>
+           <LanguageSwitcher />
         </div>
       </header>
 
@@ -45,14 +51,14 @@ export default function CreateProjectPage() {
               <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 ${step >= 1 ? 'bg-primary text-white border-primary' : 'bg-white border-gray-300'}`}>
                 1
               </div>
-              <span className="font-medium">Upload File</span>
+              <span className="font-medium">{t('create.step1')}</span>
             </div>
 
             <div className={`flex items-center gap-3 bg-gray-50 pl-4 ${step >= 2 ? 'text-primary' : 'text-gray-400'}`}>
               <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 ${step >= 2 ? 'bg-primary text-white border-primary' : 'bg-white border-gray-300'}`}>
                 2
               </div>
-              <span className="font-medium">Material Settings</span>
+              <span className="font-medium">{t('create.step2')}</span>
             </div>
           </div>
         </div>
@@ -68,8 +74,8 @@ export default function CreateProjectPage() {
               <Card className="border-0 shadow-sm">
                 <CardContent className="pt-6">
                   <div className="mb-6">
-                    <h2 className="text-xl font-semibold mb-2">Step 1: Upload File</h2>
-                    <p className="text-gray-500 text-sm">Drag and drop your PowerPoint (PPT/PPTX) or PDF file here.</p>
+                    <h2 className="text-xl font-semibold mb-2">{t('create.step1.title')}</h2>
+                    <p className="text-gray-500 text-sm">{t('create.step1.desc')}</p>
                   </div>
                   <FileUploader onFileSelect={handleFileSelect} />
                 </CardContent>
@@ -87,22 +93,22 @@ export default function CreateProjectPage() {
               <Card className="border-0 shadow-sm">
                 <CardContent className="pt-6 space-y-6">
                   <div>
-                    <h2 className="text-xl font-semibold mb-2">Step 2: Material Settings</h2>
-                    <p className="text-gray-500 text-sm mb-6">Configure how you want to generate your animation materials.</p>
+                    <h2 className="text-xl font-semibold mb-2">{t('create.step2.title')}</h2>
+                    <p className="text-gray-500 text-sm mb-6">{t('create.step2.desc')}</p>
                   </div>
 
                   <div className="grid gap-6">
                     <div className="space-y-2">
-                      <Label>Video Title</Label>
+                      <Label>{t('create.label.videoTitle')}</Label>
                       <Input placeholder="e.g., Compliance Training 2024" defaultValue={file?.name?.split('.')[0]} />
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-6">
                       <div className="space-y-2">
-                        <Label>Source Language</Label>
+                        <Label>{t('create.label.sourceLang')}</Label>
                         <Select defaultValue="ja">
                           <SelectTrigger>
-                            <SelectValue placeholder="Select language" />
+                            <SelectValue placeholder={t('create.placeholder.selectLang')} />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="ja">Japanese</SelectItem>
@@ -112,24 +118,24 @@ export default function CreateProjectPage() {
                       </div>
                       
                       <div className="space-y-2">
-                        <Label>Video Template</Label>
+                        <Label>{t('create.label.template')}</Label>
                         <Select defaultValue="business">
                           <SelectTrigger>
-                            <SelectValue placeholder="Select template" />
+                            <SelectValue placeholder={t('create.placeholder.selectTemplate')} />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="business">Business</SelectItem>
-                            <SelectItem value="creative">Creative</SelectItem>
+                            <SelectItem value="business">{t('create.option.business')}</SelectItem>
+                            <SelectItem value="creative">{t('create.option.creative')}</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
                     </div>
 
                     <div className="space-y-2">
-                      <Label>Voice Style</Label>
+                      <Label>{t('create.label.voiceStyle')}</Label>
                       <Select defaultValue="female-a">
                         <SelectTrigger>
-                          <SelectValue placeholder="Select voice" />
+                          <SelectValue placeholder={t('create.placeholder.selectVoice')} />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="female-a">Female A (Professional)</SelectItem>
@@ -140,7 +146,7 @@ export default function CreateProjectPage() {
 
                     <div className="grid md:grid-cols-3 gap-6 pt-4 border-t">
                       <div className="space-y-2">
-                        <Label className="text-xs uppercase tracking-wider text-gray-500">Target Subtitles</Label>
+                        <Label className="text-xs uppercase tracking-wider text-gray-500">{t('create.label.targetSubtitles')}</Label>
                         <Select defaultValue="en">
                           <SelectTrigger>
                             <SelectValue />
@@ -153,7 +159,7 @@ export default function CreateProjectPage() {
                       </div>
 
                       <div className="space-y-2">
-                        <Label className="text-xs uppercase tracking-wider text-gray-500">Target Audio</Label>
+                        <Label className="text-xs uppercase tracking-wider text-gray-500">{t('create.label.targetAudio')}</Label>
                          <Select defaultValue="en">
                           <SelectTrigger>
                             <SelectValue />
@@ -166,7 +172,7 @@ export default function CreateProjectPage() {
                       </div>
 
                       <div className="space-y-2">
-                        <Label className="text-xs uppercase tracking-wider text-gray-500">Target Material</Label>
+                        <Label className="text-xs uppercase tracking-wider text-gray-500">{t('create.label.targetMaterial')}</Label>
                          <Select defaultValue="en">
                           <SelectTrigger>
                             <SelectValue />
@@ -181,9 +187,9 @@ export default function CreateProjectPage() {
                   </div>
 
                   <div className="flex justify-end gap-3 pt-6">
-                    <Button variant="outline" onClick={() => setStep(1)}>Back</Button>
+                    <Button variant="outline" onClick={() => setStep(1)}>{t('create.btn.back')}</Button>
                     <Button onClick={handleCreate} className="bg-primary hover:bg-primary/90 min-w-[150px]">
-                      Create Material
+                      {t('create.btn.create')}
                     </Button>
                   </div>
                 </CardContent>

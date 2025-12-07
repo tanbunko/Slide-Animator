@@ -8,6 +8,7 @@ import LoginPage from "@/pages/login";
 import ProjectListPage from "@/pages/project-list";
 import CreateProjectPage from "@/pages/create-project";
 import WorkspacePage from "@/pages/workspace";
+import { I18nProvider } from "@/lib/i18n";
 
 function Router() {
   return (
@@ -25,12 +26,14 @@ function Router() {
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Router />
-      </TooltipProvider>
-    </QueryClientProvider>
+    <I18nProvider>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Toaster />
+          <Router />
+        </TooltipProvider>
+      </QueryClientProvider>
+    </I18nProvider>
   );
 }
 

@@ -3,6 +3,8 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Search, Plus, MoreVertical, Play, FileEdit, Trash2, Download } from "lucide-react";
 import { useLocation } from "wouter";
+import { useI18n } from "@/lib/i18n";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import {
   Table,
   TableBody,
@@ -19,43 +21,44 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { motion } from "framer-motion";
 
-const projects = [
-  {
-    id: 1,
-    title: "Compliance Training 2024",
-    date: "2024-11-01",
-    status: "Post-Editing",
-    statusColor: "bg-blue-100 text-blue-700",
-    languages: ["JA", "EN"],
-  },
-  {
-    id: 2,
-    title: "Product Demo (Sales)",
-    date: "2024-10-15",
-    status: "Completed",
-    statusColor: "bg-green-100 text-green-700",
-    languages: ["JA", "ZH"],
-  },
-  {
-    id: 3,
-    title: "Onboarding Materials",
-    date: "2024-10-10",
-    status: "Processing",
-    statusColor: "bg-yellow-100 text-yellow-700",
-    languages: ["JA"],
-  },
-  {
-    id: 4,
-    title: "Q4 Financial Report",
-    date: "2024-09-28",
-    status: "Draft",
-    statusColor: "bg-gray-100 text-gray-700",
-    languages: ["EN"],
-  },
-];
-
 export default function ProjectListPage() {
   const [, setLocation] = useLocation();
+  const { t } = useI18n();
+
+  const projects = [
+    {
+      id: 1,
+      title: "Compliance Training 2024",
+      date: "2024-11-01",
+      status: t('dashboard.status.post_editing'),
+      statusColor: "bg-blue-100 text-blue-700",
+      languages: ["JA", "EN"],
+    },
+    {
+      id: 2,
+      title: "Product Demo (Sales)",
+      date: "2024-10-15",
+      status: t('dashboard.status.completed'),
+      statusColor: "bg-green-100 text-green-700",
+      languages: ["JA", "ZH"],
+    },
+    {
+      id: 3,
+      title: "Onboarding Materials",
+      date: "2024-10-10",
+      status: t('dashboard.status.processing'),
+      statusColor: "bg-yellow-100 text-yellow-700",
+      languages: ["JA"],
+    },
+    {
+      id: 4,
+      title: "Q4 Financial Report",
+      date: "2024-09-28",
+      status: t('dashboard.status.draft'),
+      statusColor: "bg-gray-100 text-gray-700",
+      languages: ["EN"],
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-gray-50/50">
@@ -63,9 +66,10 @@ export default function ProjectListPage() {
         <div className="container mx-auto px-6 h-16 flex items-center justify-between">
           <div className="font-bold text-xl text-primary flex items-center gap-2">
             <div className="w-8 h-8 rounded bg-primary text-white flex items-center justify-center text-sm">IG</div>
-            <span>My Dashboard</span>
+            <span>{t('dashboard.title')}</span>
           </div>
           <div className="flex items-center gap-4">
+            <LanguageSwitcher />
             <div className="w-8 h-8 rounded-full bg-gray-200" />
           </div>
         </div>
@@ -75,11 +79,11 @@ export default function ProjectListPage() {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div className="relative max-w-md w-full">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
-            <Input placeholder="Search projects..." className="pl-10 bg-white" />
+            <Input placeholder={t('dashboard.search')} className="pl-10 bg-white" />
           </div>
           <Button onClick={() => setLocation("/create")} className="bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20">
             <Plus className="w-4 h-4 mr-2" />
-            Create New Material
+            {t('dashboard.create')}
           </Button>
         </div>
 
@@ -87,11 +91,11 @@ export default function ProjectListPage() {
           <Table>
             <TableHeader>
               <TableRow className="bg-gray-50/50 hover:bg-gray-50/50">
-                <TableHead className="w-[400px]">Project Name</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Languages</TableHead>
-                <TableHead>Last Updated</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead className="w-[400px]">{t('dashboard.table.project')}</TableHead>
+                <TableHead>{t('dashboard.table.status')}</TableHead>
+                <TableHead>{t('dashboard.table.languages')}</TableHead>
+                <TableHead>{t('dashboard.table.updated')}</TableHead>
+                <TableHead className="text-right">{t('dashboard.table.actions')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -144,10 +148,10 @@ export default function ProjectListPage() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem>Duplicate</DropdownMenuItem>
+                          <DropdownMenuItem>{t('dashboard.action.duplicate')}</DropdownMenuItem>
                           <DropdownMenuItem className="text-red-600">
                             <Trash2 className="w-4 h-4 mr-2" />
-                            Delete
+                            {t('dashboard.action.delete')}
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>

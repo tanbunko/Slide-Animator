@@ -5,9 +5,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, Check, Download, Play, Upload, Save, FileText, Music, MonitorPlay } from "lucide-react";
 import { useLocation } from "wouter";
 import { Separator } from "@/components/ui/separator";
+import { useI18n } from "@/lib/i18n";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 export default function WorkspacePage() {
   const [, setLocation] = useLocation();
+  const { t } = useI18n();
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -18,13 +21,16 @@ export default function WorkspacePage() {
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <div>
-              <div className="font-semibold text-lg leading-none">Translation Material Workspace</div>
-              <div className="text-xs text-gray-500 mt-1">Project: Compliance Training 2024</div>
+              <div className="font-semibold text-lg leading-none">{t('workspace.title')}</div>
+              <div className="text-xs text-gray-500 mt-1">{t('workspace.project')}: Compliance Training 2024</div>
             </div>
           </div>
-          <Button variant="outline" size="sm" onClick={() => setLocation("/dashboard")}>
-            Return to Dashboard
-          </Button>
+          <div className="flex items-center gap-4">
+            <LanguageSwitcher />
+            <Button variant="outline" size="sm" onClick={() => setLocation("/dashboard")}>
+              {t('workspace.return')}
+            </Button>
+          </div>
         </div>
       </header>
 
@@ -35,18 +41,18 @@ export default function WorkspacePage() {
           <CardHeader className="bg-gray-50/50 border-b py-4 flex flex-row items-center justify-between">
             <div className="flex items-center gap-2">
               <FileText className="w-4 h-4 text-primary" />
-              <CardTitle className="text-base">Subtitles</CardTitle>
+              <CardTitle className="text-base">{t('workspace.section.subtitles')}</CardTitle>
             </div>
             <div className="flex items-center gap-2">
               <Checkbox id="check-subtitles" />
               <label htmlFor="check-subtitles" className="text-sm font-medium leading-none cursor-pointer">
-                Mark as Confirmed
+                {t('workspace.markConfirmed')}
               </label>
             </div>
           </CardHeader>
           <CardContent className="p-6 grid md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Original (Preview)</div>
+              <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('workspace.originalPreview')}</div>
               <div className="p-4 bg-gray-50 rounded-lg text-sm text-gray-600 h-[200px] overflow-y-auto border border-gray-100">
                 ユーザー機能と管理機能についてはプロトタイプを作成し、それをベースにFPの計測を実施した。
                 画面遷移
@@ -55,7 +61,7 @@ export default function WorkspacePage() {
               </div>
             </div>
             <div className="space-y-2">
-              <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Translated (Post-Edit)</div>
+              <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('workspace.translatedPostEdit')}</div>
               <Textarea 
                 className="h-[200px] resize-none font-medium"
                 defaultValue="We created a prototype for user functions and management functions, and performed FP measurement based on it.
@@ -65,7 +71,7 @@ Function image"
               />
               <div className="flex justify-end">
                 <Button size="sm" variant="ghost" className="text-primary hover:text-primary/80 h-8">
-                  <Save className="w-3 h-3 mr-1.5" /> Save Changes
+                  <Save className="w-3 h-3 mr-1.5" /> {t('workspace.saveChanges')}
                 </Button>
               </div>
             </div>
@@ -77,12 +83,12 @@ Function image"
           <CardHeader className="bg-gray-50/50 border-b py-4 flex flex-row items-center justify-between">
              <div className="flex items-center gap-2">
               <Music className="w-4 h-4 text-primary" />
-              <CardTitle className="text-base">Audio</CardTitle>
+              <CardTitle className="text-base">{t('workspace.section.audio')}</CardTitle>
             </div>
             <div className="flex items-center gap-2">
               <Checkbox id="check-audio" />
               <label htmlFor="check-audio" className="text-sm font-medium leading-none cursor-pointer">
-                Mark as Confirmed
+                {t('workspace.markConfirmed')}
               </label>
             </div>
           </CardHeader>
@@ -112,12 +118,12 @@ Function image"
            <CardHeader className="bg-gray-50/50 border-b py-4 flex flex-row items-center justify-between">
             <div className="flex items-center gap-2">
               <MonitorPlay className="w-4 h-4 text-primary" />
-              <CardTitle className="text-base">Presentation Material</CardTitle>
+              <CardTitle className="text-base">{t('workspace.section.material')}</CardTitle>
             </div>
             <div className="flex items-center gap-2">
               <Checkbox id="check-material" />
               <label htmlFor="check-material" className="text-sm font-medium leading-none cursor-pointer">
-                Mark as Confirmed
+                {t('workspace.markConfirmed')}
               </label>
             </div>
           </CardHeader>
@@ -127,25 +133,25 @@ Function image"
                 <div className="w-16 h-16 bg-white rounded-full shadow-sm flex items-center justify-center mx-auto text-gray-400">
                   <FileText className="w-8 h-8" />
                 </div>
-                <p className="text-sm text-gray-500 font-medium">PPT Preview (Page 1/12)</p>
+                <p className="text-sm text-gray-500 font-medium">{t('workspace.pptPreview')}</p>
               </div>
               {/* Overlay for hover */}
               <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
                  <Button variant="secondary">
-                   <Play className="w-4 h-4 mr-2" /> Preview Animation
+                   <Play className="w-4 h-4 mr-2" /> {t('workspace.previewAnimation')}
                  </Button>
               </div>
             </div>
 
             <div className="flex gap-4 border-t pt-6">
               <Button variant="outline" className="flex-1">
-                <Download className="w-4 h-4 mr-2" /> Download PPTX
+                <Download className="w-4 h-4 mr-2" /> {t('workspace.downloadPPTX')}
               </Button>
               <Button variant="outline" className="flex-1">
-                <Upload className="w-4 h-4 mr-2" /> Upload Replacement
+                <Upload className="w-4 h-4 mr-2" /> {t('workspace.uploadReplacement')}
               </Button>
               <Button className="flex-1 bg-primary hover:bg-primary/90 text-white">
-                <Check className="w-4 h-4 mr-2" /> Finalize File
+                <Check className="w-4 h-4 mr-2" /> {t('workspace.finalizeFile')}
               </Button>
             </div>
           </CardContent>
@@ -153,7 +159,7 @@ Function image"
 
         <div className="flex justify-end pt-4 pb-12">
           <Button size="lg" className="bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/25">
-            Save & Return to Dashboard
+            {t('workspace.saveReturn')}
           </Button>
         </div>
       </main>
