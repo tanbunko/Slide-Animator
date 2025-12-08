@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -6,14 +7,60 @@ import { useLocation } from "wouter";
 import { motion } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { useToast } from "@/hooks/use-toast";
+import { Loader2 } from "lucide-react";
 
 export default function LoginPage() {
   const [, setLocation] = useLocation();
   const { t } = useI18n();
+  const { toast } = useToast();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLocation("/dashboard");
+    setIsLoading(true);
+
+    try {
+      const formData = new URLSearchParams();
+      formData.append('username', email);
+      formData.append('password', password);
+
+      const response = await fetch('https://bpay-api-staging.social-design.group/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.detail || 'Login failed');
+      }
+
+      const data = await response.json();
+      
+      // Store token
+      localStorage.setItem('access_token', data.access_token);
+      
+      toast({
+        title: "Success",
+        description: "Login successful",
+      });
+      
+      setLocation("/dashboard");
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to login",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -44,17 +91,41 @@ export default function LoginPage() {
             <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email">{t('login.email')}</Label>
-                <Input id="email" type="email" placeholder="you@example.com" required className="bg-white/50" />
+                <Input 
+                  id="email" 
+                  type="email" // Keep type email for browser validation if desired, but API takes username. Usually emails are usernames.
+                  placeholder="you@example.com" 
+                  required 
+                  className="bg-white/50"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={isLoading}
+                />
               </div>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="password">{t('login.password')}</Label>
                   <a href="#" className="text-xs text-primary hover:underline">{t('login.forgotPassword')}</a>
                 </div>
-                <Input id="password" type="password" required className="bg-white/50" />
+                <Input 
+                  id="password" 
+                  type="password" 
+                  required 
+                  className="bg-white/50"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  disabled={isLoading}
+                />
               </div>
-              <Button type="submit" className="w-full bg-primary hover:bg-primary/90">
-                {t('login.submit')}
+              <Button type="submit" className="w-full bg-primary hover:bg-primary/90" disabled={isLoading}>
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Logging in...
+                  </>
+                ) : (
+                  t('login.submit')
+                )}
               </Button>
             </form>
           </CardContent>
