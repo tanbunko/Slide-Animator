@@ -6,14 +6,38 @@ import { useLocation } from "wouter";
 import { motion } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { useState } from "react";
+import { Database, Server, Loader2 } from "lucide-react";
 
 export default function LoginPage() {
   const [, setLocation] = useLocation();
   const { t } = useI18n();
+  const [isLoading, setIsLoading] = useState(false);
+  
+  // Default values for Odoo connection
+  const [serverUrl, setServerUrl] = useState("https://bepay-staging.social-design.group/");
+  const [database, setDatabase] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLocation("/dashboard");
+    setIsLoading(true);
+
+    // Simulation of Odoo login attempt
+    console.log("Attempting to connect to Odoo XML-RPC...", {
+      url: serverUrl,
+      db: database,
+      username: email
+    });
+
+    // In a real implementation with backend, this would call:
+    // await fetch('/api/odoo/login', { method: 'POST', body: JSON.stringify({ url, db, username, password }) })
+    
+    setTimeout(() => {
+      setIsLoading(false);
+      setLocation("/dashboard");
+    }, 1500);
   };
 
   return (
@@ -42,19 +66,70 @@ export default function LoginPage() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleLogin} className="space-y-4">
+              
+              {/* Odoo Connection Settings (Collapsible or visible) */}
+              <div className="bg-gray-50 p-3 rounded-lg space-y-3 border border-gray-100">
+                 <div className="space-y-2">
+                    <Label htmlFor="server" className="text-xs text-gray-500 uppercase tracking-wider flex items-center gap-1">
+                      <Server className="w-3 h-3" /> Server URL
+                    </Label>
+                    <Input 
+                      id="server" 
+                      value={serverUrl} 
+                      onChange={(e) => setServerUrl(e.target.value)}
+                      className="bg-white h-8 text-sm font-mono text-gray-600" 
+                      readOnly
+                    />
+                 </div>
+                 <div className="space-y-2">
+                    <Label htmlFor="database" className="text-xs text-gray-500 uppercase tracking-wider flex items-center gap-1">
+                      <Database className="w-3 h-3" /> Database
+                    </Label>
+                    <Input 
+                      id="database" 
+                      placeholder="e.g. bepay_staging" 
+                      value={database}
+                      onChange={(e) => setDatabase(e.target.value)}
+                      className="bg-white h-8 text-sm" 
+                    />
+                 </div>
+              </div>
+
               <div className="space-y-2">
                 <Label htmlFor="email">{t('login.email')}</Label>
-                <Input id="email" type="email" placeholder="you@example.com" required className="bg-white/50" />
+                <Input 
+                  id="email" 
+                  type="email" 
+                  placeholder="you@example.com" 
+                  required 
+                  className="bg-white/50" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
               </div>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="password">{t('login.password')}</Label>
                   <a href="#" className="text-xs text-primary hover:underline">{t('login.forgotPassword')}</a>
                 </div>
-                <Input id="password" type="password" required className="bg-white/50" />
+                <Input 
+                  id="password" 
+                  type="password" 
+                  required 
+                  className="bg-white/50" 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
               </div>
-              <Button type="submit" className="w-full bg-primary hover:bg-primary/90">
-                {t('login.submit')}
+              <Button type="submit" className="w-full bg-primary hover:bg-primary/90" disabled={isLoading}>
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Connecting...
+                  </>
+                ) : (
+                  t('login.submit')
+                )}
               </Button>
             </form>
           </CardContent>
